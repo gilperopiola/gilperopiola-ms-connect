@@ -5,8 +5,8 @@ import (
 	"net/http"
 )
 
-func SendMail(to, subject, text, html string) (response string) {
-	msMailingURL := "localhost:8067/v1"
+func SendMail(to, subject, text, html string) (status int, response string) {
+	msMailingURL := "http://localhost:9004/v1"
 	endpointURL := msMailingURL + "/SendMail"
 
 	httpRequestBody := `{

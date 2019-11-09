@@ -5,17 +5,17 @@ import (
 	"net/http"
 )
 
-func sendHTTPRequest(req *http.Request) (response string) {
+func sendHTTPRequest(req *http.Request) (status int, response string) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return ""
+		return resp.StatusCode, err.Error()
 	}
 	defer resp.Body.Close()
 
 	if b, err := ioutil.ReadAll(resp.Body); err == nil {
-		return string(b)
+		return resp.StatusCode, string(b)
 	}
 
-	return ""
+	return 400, err.Error()
 }
