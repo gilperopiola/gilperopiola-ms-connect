@@ -1,10 +1,8 @@
 package connect
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
-	"net/http"
 	"time"
 
 	"github.com/gilperopiola/frutils"
@@ -21,8 +19,9 @@ type Periodical struct {
 	Archived   bool
 }
 
+const msPeriodicalsURL = "http://localhost:9002"
+
 func CreatePeriodical(name string, days int, importance int, color string) (*Periodical, error) {
-	msPeriodicalsURL := "http://localhost:9002"
 	endpointURL := msPeriodicalsURL + "/Periodical"
 
 	httpRequestBody := `{
@@ -32,8 +31,7 @@ func CreatePeriodical(name string, days int, importance int, color string) (*Per
 		"color": "` + color + `"
 	}`
 
-	request, _ := http.NewRequest("POST", endpointURL, bytes.NewReader([]byte(httpRequestBody)))
-	status, response := sendHTTPRequest(request)
+	status, response := frutils.SendHTTPRequest("POST", endpointURL, httpRequestBody)
 
 	if status < 200 || status > 299 {
 		return &Periodical{}, errors.New(response)
@@ -46,11 +44,9 @@ func CreatePeriodical(name string, days int, importance int, color string) (*Per
 }
 
 func GetPeriodical(id int) (*Periodical, error) {
-	msPeriodicalsURL := "http://localhost:9002"
 	endpointURL := msPeriodicalsURL + "/Periodical/" + frutils.ToString(id)
 
-	request, _ := http.NewRequest("GET", endpointURL, bytes.NewReader(nil))
-	status, response := sendHTTPRequest(request)
+	status, response := frutils.SendHTTPRequest("GET", endpointURL, "")
 
 	if status < 200 || status > 299 {
 		return &Periodical{}, errors.New(response)
@@ -63,7 +59,6 @@ func GetPeriodical(id int) (*Periodical, error) {
 }
 
 func UpdatePeriodical(id int, name string, days int, importance int, color string, enabled bool, lastDone time.Time) (*Periodical, error) {
-	msPeriodicalsURL := "http://localhost:9002"
 	endpointURL := msPeriodicalsURL + "/Periodical/" + frutils.ToString(id)
 
 	httpRequestBody := `{
@@ -75,8 +70,7 @@ func UpdatePeriodical(id int, name string, days int, importance int, color strin
 		"lastDone": "` + lastDone.Format(time.RFC3339) + `"
 	}`
 
-	request, _ := http.NewRequest("PUT", endpointURL, bytes.NewReader([]byte(httpRequestBody)))
-	status, response := sendHTTPRequest(request)
+	status, response := frutils.SendHTTPRequest("PUT", endpointURL, httpRequestBody)
 
 	if status < 200 || status > 299 {
 		return &Periodical{}, errors.New(response)
@@ -89,11 +83,9 @@ func UpdatePeriodical(id int, name string, days int, importance int, color strin
 }
 
 func GetAllPeriodicals() ([]*Periodical, error) {
-	msPeriodicalsURL := "http://localhost:9002"
 	endpointURL := msPeriodicalsURL + "/Periodical?filterEnabled=true&filterArchived=false"
 
-	request, _ := http.NewRequest("GET", endpointURL, bytes.NewReader(nil))
-	status, response := sendHTTPRequest(request)
+	status, response := frutils.SendHTTPRequest("GET", endpointURL, "")
 
 	if status < 200 || status > 299 {
 		return []*Periodical{}, errors.New(response)
