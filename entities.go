@@ -30,7 +30,10 @@ func GetEntitiesOfKind(kind string) ([]*Entity, error) {
 	}
 
 	entities := []*Entity{}
-	json.Unmarshal([]byte(response), entities)
+	err := json.Unmarshal([]byte(response), entities)
+	if err != nil {
+		return []*Entity{}, err
+	}
 
 	return entities, nil
 }
