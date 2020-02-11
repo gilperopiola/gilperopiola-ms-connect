@@ -71,3 +71,21 @@ func GetWeekTransactions() ([]*Transaction, error) {
 
 	return transactions, nil
 }
+
+func GetDayTransactions() ([]*Transaction, error) {
+	endpointURL := msMoneyURL + "/Transactions/Day"
+
+	status, response := frutils.SendHTTPRequest("GET", endpointURL, "")
+
+	if status < 200 || status > 299 {
+		return []*Transaction{}, errors.New(response)
+	}
+
+	transactions := []*Transaction{}
+	err := json.Unmarshal([]byte(response), &transactions)
+	if err != nil {
+		return []*Transaction{}, err
+	}
+
+	return transactions, nil
+}
