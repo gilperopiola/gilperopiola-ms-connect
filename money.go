@@ -36,6 +36,30 @@ func GetMoneyAmount() (int, error) {
 	return amount, nil
 }
 
+func CreateTransaction(name string, description string, amount int) (*Transaction, error) {
+	endpointURL := msMoneyURL + "/Transaction"
+
+	httpRequestBody := `{
+		"name": "` + name + `",
+		"description": "` + description + `",
+		"amount": ` + frutils.ToString(amount) + `
+	}`
+
+	status, response := frutils.SendHTTPRequest("POST", endpointURL, httpRequestBody)
+
+	if status < 200 || status > 299 {
+		return &Transaction{}, errors.New(response)
+	}
+
+	transaction := &Transaction{}
+	err := json.Unmarshal([]byte(response), &transaction)
+	if err != nil {
+		return &Transaction{}, err
+	}
+
+	return transaction, nil
+}
+
 func GetTransactions() ([]*Transaction, error) {
 	endpointURL := msMoneyURL + "/Transactions"
 
