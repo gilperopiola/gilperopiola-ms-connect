@@ -3,7 +3,6 @@ package connect
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"time"
 
 	"github.com/gilperopiola/frutils"
@@ -32,7 +31,7 @@ type User struct {
 	Token string
 }
 
-const lyfeCompanyonURL = "http://localhost:9001"
+const lyfeCompanyonURL = "http://localhost:9000"
 
 func GetLyfeCompanyonToken(username string, password string) string {
 	endpointURL := lyfeCompanyonURL + "/Login"
@@ -68,12 +67,11 @@ func CreateTask(name string, importance int, duration int, daily bool, weekly bo
 		tagID = 4
 	}
 
-	log.Println(frutils.ToString(tagID))
-
 	httpRequestBody := `{
 		"name": "` + name + `",
 		"duration": ` + frutils.ToString(duration) + `,
-		"importance": ` + frutils.ToString(importance) + `
+		"importance": ` + frutils.ToString(importance) + `,
+		"tags": {"id": ` + frutils.ToString(tagID) + `}
 	}`
 
 	status, response := frutils.SendHTTPRequestWithToken("POST", endpointURL, httpRequestBody, token)
