@@ -53,13 +53,25 @@ func GetLyfeCompanyonToken(username string, password string) string {
 	return user.Token
 }
 
-func CreateTask(name string, importance int, duration int, token string) (*Task, error) {
+func CreateTask(name string, importance int, duration int, daily bool, weekly bool, monthly bool, token string) (*Task, error) {
 	endpointURL := lyfeCompanyonURL + "/Tasks"
+
+	tagID := 0
+	if daily {
+		tagID = 1
+	}
+	if weekly {
+		tagID = 2
+	}
+	if monthly {
+		tagID = 3
+	}
 
 	httpRequestBody := `{
 		"name": "` + name + `",
 		"duration": ` + frutils.ToString(duration) + `,
-		"importance": ` + frutils.ToString(importance) + `
+		"importance": ` + frutils.ToString(importance) + `,
+		"tags": {"id": ` + frutils.ToString(tagID) + `}
 	}`
 
 	status, response := frutils.SendHTTPRequestWithToken("POST", endpointURL, httpRequestBody, token)
