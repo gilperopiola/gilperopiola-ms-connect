@@ -3,6 +3,7 @@ package connect
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"time"
 
 	"github.com/gilperopiola/frutils"
@@ -73,6 +74,8 @@ func CreateTask(name string, importance int, duration int, daily bool, weekly bo
 		"importance": ` + frutils.ToString(importance) + `,
 		"tags": {"id": ` + frutils.ToString(tagID) + `}
 	}`
+
+	log.Println(httpRequestBody)
 
 	status, response := frutils.SendHTTPRequestWithToken("POST", endpointURL, httpRequestBody, token)
 
