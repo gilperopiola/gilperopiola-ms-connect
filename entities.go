@@ -20,6 +20,31 @@ type Entity struct {
 
 const msEntitiesURL = "http://localhost:9001"
 
+func CreateEntity(name string, description string, kind string, importance int) (*Entity, error) {
+	endpointURL := msEntitiesURL + "/Entity"
+
+	httpRequestBody := `{
+		"name": "` + name + `",
+		"description": "` + description + `",
+		"kind": "` + kind + `",
+		"importance": ` + frutils.ToString(importance) + `
+	}`
+
+	status, response := frutils.SendHTTPRequest("POST", endpointURL, httpRequestBody)
+
+	if status < 200 || status > 299 {
+		return &Entity{}, errors.New(response)
+	}
+
+	entity := &Entity{}
+	err := json.Unmarshal([]byte(response), &entity)
+	if err != nil {
+		return &Entity{}, err
+	}
+
+	return entity, nil
+}
+
 func GetEntitiesOfKind(kind string) ([]*Entity, error) {
 	endpointURL := msEntitiesURL + "/Entity?kind=" + kind
 
