@@ -33,11 +33,11 @@ type User struct {
 
 const lyfeCompanyonURL = "http://localhost:9000"
 
-func GetLyfeCompanyonToken(username string, password string) (string, error) {
+func GetLyfeCompanyonToken(email string, password string) (string, error) {
 	endpointURL := lyfeCompanyonURL + "/Login"
 
 	httpRequestBody := `{
-		"username": "` + username + `",
+		"email": "` + email + `",
 		"password": "` + password + `"
 	}`
 
