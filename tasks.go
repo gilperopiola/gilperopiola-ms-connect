@@ -71,7 +71,7 @@ func CreateTask(name string, importance int, duration int, daily bool, weekly bo
 		"name": "` + name + `",
 		"duration": ` + frutils.ToString(duration) + `,
 		"importance": ` + frutils.ToString(importance) + `,
-		"tags": {"id": ` + frutils.ToString(tagID) + `}
+		"tags": [{"id": ` + frutils.ToString(tagID) + `}]
 	}`
 
 	status, response := frutils.SendHTTPRequestWithToken("POST", endpointURL, httpRequestBody, token)
