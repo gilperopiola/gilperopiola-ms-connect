@@ -33,7 +33,7 @@ type User struct {
 
 const lyfeCompanyonURL = "http://localhost:9000"
 
-func GetLyfeCompanyonToken(username string, password string) string {
+func GetLyfeCompanyonToken(username string, password string) (string, error) {
 	endpointURL := lyfeCompanyonURL + "/Login"
 
 	httpRequestBody := `{
@@ -44,13 +44,13 @@ func GetLyfeCompanyonToken(username string, password string) string {
 	status, response := frutils.SendHTTPRequest("POST", endpointURL, httpRequestBody)
 
 	if status < 200 || status > 299 {
-		return ""
+		return "", errors.New(response)
 	}
 
 	user := &User{}
 	json.Unmarshal([]byte(response), user)
 
-	return user.Token
+	return user.Token, nil
 }
 
 func CreateTask(name string, importance int, duration int, daily bool, weekly bool, monthly bool, token string) (*Task, error) {
